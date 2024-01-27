@@ -1,0 +1,21 @@
+{
+  "name": "cast",
+  "version": "1.0.0",
+  "description": "cast",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlyceOsbourne/cast.git"
+  },
+  "author": "",
+  "license": "UNLICENCED",
+  "bugs": {
+    "url": "https://github.com/AlyceOsbourne/cast/issues"
+  },
+  "homepage": "https://github.com/AlyceOsbourne/cast#readme",
+  "dependencies": {
+    "parcel": "^2.11.0"
+  }
+}
