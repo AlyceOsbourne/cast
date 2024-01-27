@@ -1,3 +1,5 @@
+import html from "./htmllib";
+
 let currentEpisodeUrl = "";
 
 const CORS_PROXIES = [
@@ -64,7 +66,7 @@ function removeCurrentFeed() {
       document.getElementById("feedSelector").value = 0;
       fetchSelectedFeed();
     } else {
-      document.getElementById("episodesList").innerHTML =
+      document.getElementById("episodesList").textContent =
         "No feeds available. Please add a new feed.";
     }
   }
@@ -75,7 +77,7 @@ function removeCurrentFeed() {
 
 function populateFeedSelector() {
   const feedSelector = document.getElementById("feedSelector");
-  feedSelector.innerHTML = ""; // Clear existing options
+  feedSelector.replaceChildren(); // Clear existing options
   RSS_FEED_URLS.forEach((feed, index) => {
     const option = document.createElement("option");
     option.value = index;
@@ -88,11 +90,15 @@ async function fetchSelectedFeed() {
   const selectedIndex = document.getElementById("feedSelector").value;
   const selectedFeed = RSS_FEED_URLS[selectedIndex];
   const episodesList = document.getElementById("episodesList");
-  episodesList.innerHTML = "Loading...";
+  episodesList.textContent = "Loading...";
   for (const _ of CORS_PROXIES) {
     try {
       const response = await fetch(
-        `${CORS_PROXIES[currentProxyIndex]}${selectedFeed.url}`
+        `${CORS_PROXIES[currentProxyIndex]}${selectedFeed.url}`,
+        {
+          mode: "cors",
+          cache: "force-cache",
+        }
       );
       if (!response.ok) throw new Error("Failed to fetch RSS feed");
       const data = await response.text();
@@ -106,14 +112,14 @@ async function fetchSelectedFeed() {
     }
   }
 
-  episodesList.innerHTML = `Failed to load episodes from ${selectedFeed.name} using all available proxies.`;
+  episodesList.textContent = `Failed to load episodes from ${selectedFeed.name} using all available proxies.`;
 }
 
 function displayEpisodes(xmlDoc, channelTitle) {
   let items = xmlDoc.getElementsByTagName("item");
   items = Array.from(items).reverse();
 
-  let htmlContent = `<h2>${channelTitle}</h2>`;
+  let htmlContent = [html.h2({ textContent: channelTitle })];
 
   for (let item of items) {
     const title = item.getElementsByTagName("title")[0]?.textContent;
@@ -124,21 +130,30 @@ function displayEpisodes(xmlDoc, channelTitle) {
     const audioUrl = enclosure ? enclosure.getAttribute("url") : null;
 
     const playedClass = localStorage.getItem(audioUrl)
-      ? '<span class="played">&#10004;</span>'
-      : '<span class="played">&nbsp;</span>';
+      ? html.span({ className: "played", textContent: "\u{10004}" })
+      : html.span({ className: "played", textContent: "\xa0" });
     if (title && audioUrl) {
-      htmlContent += `
-        <div>
-          ${playedClass}
-          ${formattedDuration ? `<span> (${formattedDuration})</span>` : ""}
-          <a href="#" onclick="playEpisode('${audioUrl}', this)">${title}</a>
-        </div>
-      `;
+      const div = html.div({});
+      div.replaceChildren(
+        playedClass,
+        formattedDuration ? html.span({ textContent: formattedDuration }) : "",
+        html.a({
+          href: "#",
+          onclick: () => playEpisode(audioUrl, this),
+          textContent: title,
+        })
+      );
+      htmlContent.push(div);
     }
   }
 
-  document.getElementById("episodesList").innerHTML =
-    htmlContent || `<div>No episodes found for ${channelTitle}.</div>`;
+  document.getElementById("episodesList").replaceChildren(
+    ...(htmlContent.length > 0
+      ? htmlContent
+      : div({
+          textContent: `<div>No episodes found for ${channelTitle}.</div>`,
+        }))
+  );
 }
 
 function playEpisode(url, element) {
@@ -154,8 +169,9 @@ function markAsPlayed() {
     const links = document.querySelectorAll("#episodesList a");
     links.forEach((link) => {
       if (link.getAttribute("onclick").includes(currentEpisodeUrl)) {
-        link.parentElement.firstElementChild.innerHTML =
-          '<span class="played">&#10004;</span>';
+        link.parentElement.firstElementChild.replaceChildren(
+          html.span({ class: "played", textContent: "\u{10004}" })
+        );
       }
     });
   }
