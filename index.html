@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Podcast Player</title>
-<!--    <link rel="stylesheet" href="{{ url_for('static', filename='feed.css') }}">-->
-<!--    <script src="{{ url_for('static', filename='feed.js') }}"></script>-->
-    <style>
-:root {
+    <style>:root {
     --bg-color: #121212;
     --accent-color: #ff6f00;
     --text-color: #ffffff;
@@ -23,6 +20,7 @@ body {
     margin: auto;
     line-height: 1.4;
 }
+
 
 #feed{
     display: flex;
@@ -182,10 +180,17 @@ audio::-webkit-media-controls-toggle-closed-captions-button
     background-color: var(--accent-color);
     border-radius: 50%;
 }
-    </style>
-    <script>
-let currentEpisodeUrl = '';
-const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+
+</style>
+    <script>let currentEpisodeUrl = '';
+
+// Define multiple CORS proxies
+const CORS_PROXIES = [
+    "https://api.allorigins.win/raw?url=",
+    "https://cors.bridged.cc/",
+    "https://cors-anywhere.herokuapp.com/"
+];
+let currentProxyIndex = 0; // Start with the first proxy
 
 const defaultFeeds = [
     { name: "Lateralcast", url: "https://feeds.megaphone.fm/lateralcast" },
@@ -200,6 +205,10 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchSelectedFeed();
 });
 
+function getNextProxy() {
+    currentProxyIndex = (currentProxyIndex + 1) % CORS_PROXIES.length;
+    return CORS_PROXIES[currentProxyIndex];
+}
 
 function addFeed() {
     const name = document.getElementById('feedName').value.trim();
@@ -254,40 +263,28 @@ function populateFeedSelector() {
     });
 }
 
-function removeFeed(index) {
-    RSS_FEED_URLS.splice(index, 1);
-    localStorage.setItem('userFeeds', JSON.stringify(RSS_FEED_URLS));
-    populateFeedSelector();
-}
-
-
-
-function populateFeedSelector() {
-    const feedSelector = document.getElementById("feedSelector");
-    feedSelector.innerHTML = ''; // Clear existing options
-    RSS_FEED_URLS.forEach((feed, index) => {
-        const option = document.createElement("option");
-        option.value = index;
-        option.textContent = feed.name;
-        feedSelector.appendChild(option);
-    });
-}
-
 async function fetchSelectedFeed() {
     const selectedIndex = document.getElementById("feedSelector").value;
     const selectedFeed = RSS_FEED_URLS[selectedIndex];
 
-    try {
-        const response = await fetch(`${CORS_PROXY}${selectedFeed.url}`);
-        if (!response.ok) throw new Error('Failed to fetch RSS feed');
-        const data = await response.text();
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(data, "text/xml");
-        displayEpisodes(xmlDoc, selectedFeed.name);
-    } catch (error) {
-        console.error('Error fetching the RSS feed:', error);
-        document.getElementById("episodesList").innerHTML = `Failed to load episodes from ${selectedFeed.name}.`;
+    // Cycle through proxies if needed
+    for (let attempt = 0; attempt < CORS_PROXIES.length; attempt++) {
+        try {
+            const response = await fetch(`${CORS_PROXIES[currentProxyIndex]}${selectedFeed.url}`);
+            if (!response.ok) throw new Error('Failed to fetch RSS feed');
+            const data = await response.text();
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(data, "text/xml");
+            displayEpisodes(xmlDoc, selectedFeed.name);
+            return; // Exit if successful
+        } catch (error) {
+            console.error('Error fetching the RSS feed:', error);
+            getNextProxy(); // Switch to the next proxy for the next attempt
+        }
     }
+
+    // If all proxies fail
+    document.getElementById("episodesList").innerHTML = `Failed to load episodes from ${selectedFeed.name} using all available proxies.`;
 }
 
 function displayEpisodes(xmlDoc, channelTitle) {
@@ -317,7 +314,6 @@ function displayEpisodes(xmlDoc, channelTitle) {
 
     document.getElementById("episodesList").innerHTML = htmlContent || `<div>No episodes found for ${channelTitle}.</div>`;
 }
-
 
 function playEpisode(url, element) {
     const audioPlayer = document.getElementById("audioPlayer");
@@ -353,7 +349,7 @@ function formatDuration(duration) {
     }
     return duration;
 }
-    </script>
+</script>
 </head>
 <body>
     <h1>Podcast Player</h1>
