@@ -132,20 +132,20 @@ body {
 }
 
 #episodesList::-webkit-scrollbar {
-    width: 8px; /* Adjust the width of the scrollbar */
+    width: 8px;
 }
 
 #episodesList::-webkit-scrollbar-track {
-    background: var(--bg-color); /* Background of the scrollbar track */
+    background: var(--bg-color);
 }
 
 #episodesList::-webkit-scrollbar-thumb {
-    background: var(--accent-color); /* Color of the scrollbar thumb */
-    border-radius: 4px; /* Optional: roundness of the scrollbar thumb */
+    background: var(--accent-color); 
+    border-radius: 4px;
 }
 
 #episodesList::-webkit-scrollbar-thumb:hover {
-    background: #ff8c00; /* Slightly lighter shade for hover effect */
+    background: #ff8c00;
 }
 
 .played {
@@ -184,13 +184,12 @@ audio::-webkit-media-controls-toggle-closed-captions-button
 </style>
     <script>let currentEpisodeUrl = '';
 
-// Define multiple CORS proxies
 const CORS_PROXIES = [
     "https://api.allorigins.win/raw?url=",
     "https://cors.bridged.cc/",
     "https://cors-anywhere.herokuapp.com/"
 ];
-let currentProxyIndex = 0; // Start with the first proxy
+let currentProxyIndex = 0;
 
 const defaultFeeds = [
     { name: "Lateralcast", url: "https://feeds.megaphone.fm/lateralcast" },
@@ -266,9 +265,9 @@ function populateFeedSelector() {
 async function fetchSelectedFeed() {
     const selectedIndex = document.getElementById("feedSelector").value;
     const selectedFeed = RSS_FEED_URLS[selectedIndex];
-
-    // Cycle through proxies if needed
-    for (let attempt = 0; attempt < CORS_PROXIES.length; attempt++) {
+    const episodesList = document.getElementById("episodesList");
+    episodesList.innerHTML = 'Loading...';
+    for (const _ of CORS_PROXIES) {
         try {
             const response = await fetch(`${CORS_PROXIES[currentProxyIndex]}${selectedFeed.url}`);
             if (!response.ok) throw new Error('Failed to fetch RSS feed');
@@ -276,15 +275,14 @@ async function fetchSelectedFeed() {
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(data, "text/xml");
             displayEpisodes(xmlDoc, selectedFeed.name);
-            return; // Exit if successful
+            return;
         } catch (error) {
             console.error('Error fetching the RSS feed:', error);
-            getNextProxy(); // Switch to the next proxy for the next attempt
+            getNextProxy();
         }
     }
 
-    // If all proxies fail
-    document.getElementById("episodesList").innerHTML = `Failed to load episodes from ${selectedFeed.name} using all available proxies.`;
+    episodesList.innerHTML = `Failed to load episodes from ${selectedFeed.name} using all available proxies.`;
 }
 
 function displayEpisodes(xmlDoc, channelTitle) {
