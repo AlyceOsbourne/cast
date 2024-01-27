@@ -128,16 +128,12 @@ function displayEpisodes(xmlDoc, channelTitle) {
       : '<span class="played">&nbsp;</span>';
     if (title && audioUrl) {
       htmlContent += `
-                <div>
-                    ${playedClass}
-                    ${
-                      formattedDuration
-                        ? `<span> (${formattedDuration})</span>`
-                        : ""
-                    }
-                    <a href="#" onclick="playEpisode('${audioUrl}', this)">${title}</a>
-                </div>
-            `;
+        <div>
+          ${playedClass}
+          ${formattedDuration ? `<span> (${formattedDuration})</span>` : ""}
+          <a href="#" onclick="playEpisode('${audioUrl}', this)">${title}</a>
+        </div>
+      `;
     }
   }
 
