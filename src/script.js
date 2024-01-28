@@ -41,10 +41,13 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.setVolume(ev.currentTarget.value);
   });
 
+  const timestampWidget = document.querySelector("#timestamp");
+
   audio.onTimestampChange = (current, total) => {
     document.querySelector("#progress").style.width = `${
       (current * 100) / total
     }%`;
+    timestampWidget.textContent = formatNumericalDuration(current);
   };
 
   document.querySelector("#waveform").addEventListener("click", (ev) => {
@@ -188,9 +191,8 @@ function displayEpisodes(xmlDoc, channelTitle) {
 function playEpisode(url) {
   audio.switchTrack(url).then((duration) => {
     audio.renderWaveform(document.querySelector("#waveform"));
-    document.querySelector("#duration").textContent = `${Math.floor(
-      duration / 60
-    )}:${Math.floor(duration % 60)}`;
+    document.querySelector("#duration").textContent =
+      formatNumericalDuration(duration);
   });
   paused = false;
 }
@@ -219,12 +221,22 @@ function formatDuration(duration) {
   } else if (parts.length === 2) {
     return `${parts[0]}:${parts[1].toString().padStart(2, "0")}`;
   } else if (parts.length === 1) {
-    const hours = Math.floor(parts[0] / 3600);
-    const minutes = Math.floor((parts[0] % 3600) / 60);
-    const seconds = parts[0] % 60;
+    return formatNumericalDuration(parts[0]);
+  }
+  return duration;
+}
+
+function formatNumericalDuration(duration) {
+  const hours = Math.floor(duration / 3600);
+  const minutes = Math.floor((duration % 3600) / 60);
+  const seconds = Math.floor(duration % 60);
+  if (hours > 0) {
     return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
       .toString()
       .padStart(2, "0")}`;
+  } else {
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   }
-  return duration;
 }

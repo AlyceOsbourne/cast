@@ -157,7 +157,7 @@ body {
 
 #pause {
   background-color: transparent;
-  border: 1px solid var(--accent-color);
+  border: 2px solid var(--accent-color);
   border-radius: 1rem;
   color: white;
   padding: 0;
