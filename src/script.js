@@ -195,8 +195,7 @@ function playEpisode(url) {
   document.querySelector("#loading").style.display = "block";
   const canvas = document.querySelector("#waveform");
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "var(--bg-color)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   audio.switchTrack(url).then((duration) => {
       audio.renderWaveform(document.querySelector("#waveform"));
       document.querySelector("#duration").textContent = formatNumericalDuration(duration);
