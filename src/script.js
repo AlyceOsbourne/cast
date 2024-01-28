@@ -192,15 +192,14 @@ function displayEpisodes(xmlDoc, channelTitle) {
 }
 
 function playEpisode(url) {
-// overlay a loading indicator until the audio is ready to play
-    document.querySelector("#loading").style.display = "block";
+  document.querySelector("#loading").style.display = "block";
   audio.switchTrack(url).then((duration) => {
     audio.renderWaveform(document.querySelector("#waveform"));
     document.querySelector("#duration").textContent =
       formatNumericalDuration(duration);
   });
-    currentEpisodeUrl = url;
-    document.querySelector("#loading").style.display = "none";
+  currentEpisodeUrl = url;
+  document.querySelector("#loading").style.display = "none";
   paused = false;
 }
 
