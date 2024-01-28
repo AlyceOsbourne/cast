@@ -3,6 +3,17 @@
   --accent-color: #ff6f00;
   --text-color: #ffffff;
   --played-color: #4caf50;
+  color-scheme: dark light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-color: #ffffff;
+    --accent-color: #ff8c00;
+    --text-color: #000000;
+    --played-color: #4caf50;
+    color-scheme: light dark;
+  }
 }
 
 * {
@@ -17,6 +28,12 @@ body {
   max-width: 800px;
   margin: auto;
   line-height: 1.4;
+}
+
+#container {
+  border: 2px solid var(--accent-color);
+  border-radius: 10px;
+  padding: 30px;
 }
 
 #feed {

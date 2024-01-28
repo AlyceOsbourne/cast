@@ -14,9 +14,9 @@ let paused = true;
 
 const defaultFeeds = [
   { name: "Lateralcast", url: "https://feeds.megaphone.fm/lateralcast" },
-  { name: "Colbey", url: "https://media.rss.com/colbey/feed.xml" },
+  { name: "RadioLab", url: "https://feeds.simplecast.com/EmVW7VGp" },
+  { name: "RealPython", url: "https://realpython.com/podcasts/rpp/feed/" },
 ];
-
 let RSS_FEED_URLS =
   JSON.parse(localStorage.getItem("userFeeds")) || defaultFeeds;
 
