@@ -70,8 +70,8 @@ const audio = () => {
       }
 
       let ctx = canvas.getContext("2d");
-      ctx.fillStyle = "#ffffff";
-
+      let color = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+      ctx.fillStyle = color;
       ctx.clearRect(0, 0, rect.width, rect.height);
 
       ctx.beginPath();
