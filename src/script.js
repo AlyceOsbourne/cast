@@ -46,6 +46,10 @@ document.addEventListener("DOMContentLoaded", () => {
       (current * 100) / total
     }%`;
   };
+
+  document.querySelector("#waveform").addEventListener("click", (ev) => {
+    audio.playFromTimestamp(ev.offsetX / ev.target.width);
+  });
 });
 
 function getNextProxy() {

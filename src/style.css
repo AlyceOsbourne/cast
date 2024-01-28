@@ -178,20 +178,25 @@ body {
   position: absolute;
   left: 0;
   top: 0;
+  cursor: pointer;
 }
 
 #progress {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
   position: absolute;
   left: 0;
   top: 0;
   width: 5rem;
   height: 5rem;
+  border-right: 2px solid var(--accent-color);
 }
 
 .waveformContainer {
   position: relative;
   height: 5rem;
+  border: 2px solid var(--accent-color);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 #volume {

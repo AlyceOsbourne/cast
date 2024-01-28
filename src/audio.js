@@ -1,9 +1,13 @@
 const audio = () => {
   let audioCtx = null;
   let buffer = null;
+  let source = null;
 
   let gainNode = null;
   let interval = null;
+
+  let timeOffset = 0;
+  let paused = false;
 
   return {
     async switchTrack(filename, timestamp = 0) {
@@ -21,7 +25,11 @@ const audio = () => {
       return buffer.duration;
     },
     playFromTimestamp(timestamp) {
-      const source = audioCtx.createBufferSource();
+      if (source !== null) {
+        source.stop();
+      }
+
+      source = audioCtx.createBufferSource();
       source.buffer = buffer;
 
       gainNode = audioCtx.createGain();
@@ -30,16 +38,20 @@ const audio = () => {
 
       source.connect(gainNode);
 
-      source.start(0, timestamp);
+      timeOffset = audioCtx.currentTime - timestamp * buffer.duration;
+      source.start(0, timestamp * buffer.duration);
+
       this.startInterval();
     },
     unpause() {
+      paused = false;
       if (audioCtx) {
         audioCtx.resume();
         this.startInterval();
       }
     },
     pause() {
+      paused = true;
       if (audioCtx) {
         this.stopIntervalIfActive();
         audioCtx.suspend();
@@ -58,8 +70,7 @@ const audio = () => {
       }
 
       let ctx = canvas.getContext("2d");
-      ctx.fillStyle = "red";
-      ctx.strokeStyle = "green";
+      ctx.fillStyle = "#ffffff";
 
       ctx.clearRect(0, 0, rect.width, rect.height);
 
@@ -98,10 +109,17 @@ const audio = () => {
     startInterval() {
       this.stopIntervalIfActive();
 
-      window.setInterval(
-        () => this.onTimestampChange(audioCtx.currentTime, buffer.duration),
-        200
-      );
+      let f = () =>
+        this.onTimestampChange(
+          audioCtx.currentTime - timeOffset,
+          buffer.duration
+        );
+
+      f();
+
+      if (!paused) {
+        window.setInterval(f, 200);
+      }
     },
   };
 };
