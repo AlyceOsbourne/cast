@@ -196,21 +196,27 @@ function playEpisode(url) {
   document.querySelector("#loading").style.display = "block";
 
   audio.switchTrack(url).then((duration) => {
-    audio.renderWaveform(document.querySelector("#waveform"));
-    document.querySelector("#duration").textContent = formatNumericalDuration(duration);
+      audio.renderWaveform(document.querySelector("#waveform"));
+      document.querySelector("#duration").textContent = formatNumericalDuration(duration);
 
-    audio.play().then(() => {
-      document.querySelector("#loading").style.display = "none";
+      currentEpisodeUrl = url;
       paused = false;
-    }).catch((error) => {
-      console.error("Error playing the audio:", error);
-      document.querySelector("#loading").style.display = "none";
-    });
 
-    currentEpisodeUrl = url;
+      audio.play();
+
+      let oneSecondPlayed = false;
+      const onTimeUpdate = () => {
+          if (audio.currentTime >= 1 && !oneSecondPlayed) {
+              document.querySelector("#loading").style.display = "none";
+              oneSecondPlayed = true;
+              audio.removeEventListener('timeupdate', onTimeUpdate);
+          }
+      };
+
+      audio.addEventListener('timeupdate', onTimeUpdate);
   }).catch((error) => {
-    console.error("Error switching the audio track:", error);
-    document.querySelector("#loading").style.display = "none";
+      console.error("Error switching the audio track:", error);
+      document.querySelector("#loading").style.display = "none";
   });
 }
 
