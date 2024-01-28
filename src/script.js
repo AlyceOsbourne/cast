@@ -192,7 +192,9 @@ function displayEpisodes(xmlDoc, channelTitle) {
 }
 
 function playEpisode(url) {
-  // Show the loading indicator
+  const waveform = document.querySelector("#waveform");
+  const ctx = waveform.getContext("2d");
+  ctx.clearRect(0, 0, waveform.width, waveform.height);
   document.querySelector("#loading").style.display = "block";
 
   audio.switchTrack(url).then((duration) => {
