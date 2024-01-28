@@ -27,12 +27,15 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("change", fetchSelectedFeed);
   fetchSelectedFeed();
 
-  document.querySelector("#pause").addEventListener("click", () => {
+  const pauseButton = document.querySelector("#pause");
+  pauseButton.addEventListener("click", () => {
     if (paused) {
       audio.unpause();
+      pauseButton.firstElementChild.textContent = "⏵";
       paused = false;
     } else {
       audio.pause();
+      pauseButton.firstElementChild.textContent = "⏸";
       paused = true;
     }
   });
