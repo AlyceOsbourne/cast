@@ -192,15 +192,26 @@ function displayEpisodes(xmlDoc, channelTitle) {
 }
 
 function playEpisode(url) {
+  // Show the loading indicator
   document.querySelector("#loading").style.display = "block";
+
   audio.switchTrack(url).then((duration) => {
     audio.renderWaveform(document.querySelector("#waveform"));
-    document.querySelector("#duration").textContent =
-      formatNumericalDuration(duration);
+    document.querySelector("#duration").textContent = formatNumericalDuration(duration);
+
+    audio.play().then(() => {
+      document.querySelector("#loading").style.display = "none";
+      paused = false;
+    }).catch((error) => {
+      console.error("Error playing the audio:", error);
+      document.querySelector("#loading").style.display = "none";
+    });
+
+    currentEpisodeUrl = url;
+  }).catch((error) => {
+    console.error("Error switching the audio track:", error);
+    document.querySelector("#loading").style.display = "none";
   });
-  currentEpisodeUrl = url;
-  document.querySelector("#loading").style.display = "none";
-  paused = false;
 }
 
 function markAsPlayed() {
