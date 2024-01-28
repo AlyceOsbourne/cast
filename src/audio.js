@@ -13,8 +13,6 @@ const audio = () => {
 
       audioCtx = new AudioContext();
 
-      track = null;
-
       const response = await fetch(filename);
       buffer = await audioCtx.decodeAudioData(await response.arrayBuffer());
 
