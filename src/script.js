@@ -1,13 +1,16 @@
 import html from "./htmllib";
+import audio from "./audio";
 
 let currentEpisodeUrl = "";
 
 const CORS_PROXIES = [
-  "https://api.allorigins.win/raw?url=",
-  "https://cors.bridged.cc/",
-  "https://cors-anywhere.herokuapp.com/",
+  "https://jwt.mousetail.nl/proxy/cors?url=",
+  // "https://api.allorigins.win/raw?url=",
+  // "https://cors.bridged.cc/",
+  // "https://cors-anywhere.herokuapp.com/",
 ];
 let currentProxyIndex = 0;
+let paused = true;
 
 const defaultFeeds = [
   { name: "Lateralcast", url: "https://feeds.megaphone.fm/lateralcast" },
@@ -23,6 +26,20 @@ document.addEventListener("DOMContentLoaded", () => {
     .getElementById("feedSelector")
     .addEventListener("change", fetchSelectedFeed);
   fetchSelectedFeed();
+
+  document.querySelector("#pause").addEventListener("click", () => {
+    if (paused) {
+      audio.unpause();
+      paused = false;
+    } else {
+      audio.pause();
+      paused = true;
+    }
+  });
+
+  document.querySelector("#volume").addEventListener("input", (ev) => {
+    audio.setVolume(ev.currentTarget.value);
+  });
 });
 
 function getNextProxy() {
@@ -94,7 +111,9 @@ async function fetchSelectedFeed() {
   for (const _ of CORS_PROXIES) {
     try {
       const response = await fetch(
-        `${CORS_PROXIES[currentProxyIndex]}${selectedFeed.url}`,
+        `${CORS_PROXIES[currentProxyIndex]}${encodeURIComponent(
+          selectedFeed.url
+        )}`,
         {
           mode: "cors",
           cache: "force-cache",
@@ -139,7 +158,7 @@ function displayEpisodes(xmlDoc, channelTitle) {
         formattedDuration ? html.span({ textContent: formattedDuration }) : "",
         html.a({
           href: "#",
-          onclick: () => playEpisode(audioUrl, this),
+          onclick: () => playEpisode(audioUrl),
           textContent: title,
         })
       );
@@ -156,11 +175,11 @@ function displayEpisodes(xmlDoc, channelTitle) {
   );
 }
 
-function playEpisode(url, element) {
-  const audioPlayer = document.getElementById("audioPlayer");
-  audioPlayer.src = url;
-  audioPlayer.play();
-  currentEpisodeUrl = url;
+function playEpisode(url) {
+  audio.switchTrack(url).then(() => {
+    audio.renderWaveform(document.querySelector("#waveform"));
+  });
+  paused = false;
 }
 
 function markAsPlayed() {
