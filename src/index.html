@@ -16,6 +16,7 @@
         <button onclick="addFeed()">Add Feed</button>
       </div>
       <div id="feedControls">
+
         <select id="feedSelector">
           <!-- Options will be populated by JavaScript -->
         </select>
@@ -26,6 +27,9 @@
       <div class="waveformContainer">
         <div id="progress"></div>
         <canvas id="waveform"></canvas>
+        <div id="loading-wheel">
+          <div id="loading" style="display: none"></div>
+        </div>
       </div>
       <div id="audioWidget">
         <button id="pause"><span>⏵</span></button>
@@ -39,7 +43,6 @@
           step="0.05"
         />
       </div>
-      <div id="loading" style="display: block">Loading...</div>
     </div>
   </body>
 </html>
