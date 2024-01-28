@@ -9,7 +9,9 @@ const audio = () => {
   let timeOffset = 0;
   let paused = false;
 
-  return {
+  let out = new EventTarget();
+
+  return Object.assign(out, {
     async switchTrack(filename, timestamp = 0) {
       if (audioCtx) {
         audioCtx.suspend();
@@ -70,7 +72,9 @@ const audio = () => {
       }
 
       let ctx = canvas.getContext("2d");
-      let color = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+      let color = getComputedStyle(document.documentElement).getPropertyValue(
+        "--accent-color"
+      );
       ctx.fillStyle = color;
       ctx.clearRect(0, 0, rect.width, rect.height);
 
@@ -110,9 +114,11 @@ const audio = () => {
       this.stopIntervalIfActive();
 
       let f = () =>
-        this.onTimestampChange(
-          audioCtx.currentTime - timeOffset,
-          buffer.duration
+        this.dispatchEvent(
+          Object.assign(new Event("timestampChange"), {
+            offset: audioCtx.currentTime - timeOffset,
+            duration: buffer.duration,
+          })
         );
 
       f();
@@ -121,7 +127,7 @@ const audio = () => {
         window.setInterval(f, 200);
       }
     },
-  };
+  });
 };
 
 export default audio();

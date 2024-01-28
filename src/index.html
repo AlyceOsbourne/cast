@@ -13,22 +13,21 @@
         <div id="addFeed">
           <input type="text" id="feedName" placeholder="Feed Name" />
           <input type="text" id="feedUrl" placeholder="Feed URL" />
-          <button onclick="addFeed()">Add Feed</button>
+          <button id="addFeedButton">Add Feed</button>
         </div>
         <div id="feedControls">
-  
           <select id="feedSelector">
             <!-- Options will be populated by JavaScript -->
           </select>
           <button onclick="removeCurrentFeed()">Remove Selected Feed</button>
         </div>
         <div id="episodesList">Select a feed to load episodes...</div>
-  
+
         <div class="waveformContainer">
           <div id="progress"></div>
           <canvas id="waveform"></canvas>
           <span id="loading-wheel">
-            <span id="loading" style="display: none;"></span>
+            <span id="loading" style="display: none"></span>
           </span>
         </div>
         <div id="audioWidget">

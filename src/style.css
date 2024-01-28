@@ -215,7 +215,7 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: 5rem;
+  width: 105%;
   height: 5rem;
   border-right: 2px solid var(--accent-color);
 }

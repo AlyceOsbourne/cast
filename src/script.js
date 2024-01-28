@@ -13,9 +13,20 @@ let currentProxyIndex = 0;
 let paused = true;
 
 const defaultFeeds = [
-  { name: "Lateralcast", url: "https://feeds.megaphone.fm/lateralcast" },
+  {
+    name: "Lateral with Tom Scott",
+    url: "https://feeds.megaphone.fm/lateralcast",
+  },
   { name: "RadioLab", url: "https://feeds.simplecast.com/EmVW7VGp" },
   { name: "RealPython", url: "https://realpython.com/podcasts/rpp/feed/" },
+  {
+    name: "Podcast of unnecessary detail",
+    url: "https://feeds.acast.com/public/shows/61deed94f2acc80013aab8aa",
+  },
+  {
+    name: "Lets learn everything",
+    url: "https://feeds.simplecast.com/2pvdZXa_",
+  },
 ];
 let RSS_FEED_URLS =
   JSON.parse(localStorage.getItem("userFeeds")) || defaultFeeds;
@@ -46,16 +57,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const timestampWidget = document.querySelector("#timestamp");
 
-  audio.onTimestampChange = (current, total) => {
+  audio.addEventListener("timestampChange", ({ offset, duration }) => {
     document.querySelector("#progress").style.width = `${
-      (current * 100) / total
+      (offset * 100) / duration
     }%`;
-    timestampWidget.textContent = formatNumericalDuration(current);
-  };
+    timestampWidget.textContent = formatNumericalDuration(offset);
+  });
 
   document.querySelector("#waveform").addEventListener("click", (ev) => {
     audio.playFromTimestamp(ev.offsetX / ev.target.width);
   });
+
+  document.querySelector("#addFeedButton").addEventListener("click", addFeed);
 });
 
 function getNextProxy() {
@@ -196,29 +209,33 @@ function playEpisode(url) {
   const canvas = document.querySelector("#waveform");
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  audio.switchTrack(url).then((duration) => {
+  audio
+    .switchTrack(url)
+    .then((duration) => {
       audio.renderWaveform(document.querySelector("#waveform"));
-      document.querySelector("#duration").textContent = formatNumericalDuration(duration);
+      document.querySelector("#duration").textContent =
+        formatNumericalDuration(duration);
 
       currentEpisodeUrl = url;
       paused = false;
 
-      audio.play();
+      audio.unpause();
 
       let oneSecondPlayed = false;
-      const onTimeUpdate = () => {
-          if (audio.currentTime >= 1 && !oneSecondPlayed) {
-              document.querySelector("#loading").style.display = "none";
-              oneSecondPlayed = true;
-              audio.removeEventListener('timeupdate', onTimeUpdate);
-          }
+      const onTimeUpdate = ({ offset }) => {
+        if (offset >= 1 && !oneSecondPlayed) {
+          document.querySelector("#loading").style.display = "none";
+          oneSecondPlayed = true;
+          audio.removeEventListener("timestampChange", onTimeUpdate);
+        }
       };
 
-      audio.addEventListener('timeupdate', onTimeUpdate);
-  }).catch((error) => {
+      audio.addEventListener("timestampChange", onTimeUpdate);
+    })
+    .catch((error) => {
       console.error("Error switching the audio track:", error);
       document.querySelector("#loading").style.display = "none";
-  });
+    });
 }
 
 function markAsPlayed() {
