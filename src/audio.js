@@ -17,6 +17,8 @@ const audio = () => {
       buffer = await audioCtx.decodeAudioData(await response.arrayBuffer());
 
       this.playFromTimestamp(timestamp);
+
+      return buffer.duration;
     },
     playFromTimestamp(timestamp) {
       const source = audioCtx.createBufferSource();

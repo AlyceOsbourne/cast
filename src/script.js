@@ -176,8 +176,11 @@ function displayEpisodes(xmlDoc, channelTitle) {
 }
 
 function playEpisode(url) {
-  audio.switchTrack(url).then(() => {
+  audio.switchTrack(url).then((duration) => {
     audio.renderWaveform(document.querySelector("#waveform"));
+    document.querySelector("#duration").textContent = `${Math.floor(
+      duration / 60
+    )}:${Math.floor(duration % 60)}`;
   });
   paused = false;
 }
