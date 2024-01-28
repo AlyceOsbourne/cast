@@ -40,6 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#volume").addEventListener("input", (ev) => {
     audio.setVolume(ev.currentTarget.value);
   });
+
+  audio.onTimestampChange = (current, total) => {
+    document.querySelector("#progress").style.width = `${
+      (current * 100) / total
+    }%`;
+  };
 });
 
 function getNextProxy() {

@@ -22,7 +22,11 @@
         <button onclick="removeCurrentFeed()">Remove Selected Feed</button>
       </div>
       <div id="episodesList">Select a feed to load episodes...</div>
-      <canvas id="waveform"></canvas>
+
+      <div class="waveformContainer">
+        <div id="progress"></div>
+        <canvas id="waveform"></canvas>
+      </div>
       <div id="audioWidget">
         <button id="pause">⏵</button>
         <div><span id="timestamp"></span>/<span id="duration"></span></div>

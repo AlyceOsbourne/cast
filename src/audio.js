@@ -3,12 +3,14 @@ const audio = () => {
   let buffer = null;
 
   let gainNode = null;
+  let interval = null;
 
   return {
     async switchTrack(filename, timestamp = 0) {
       if (audioCtx) {
         audioCtx.suspend();
       }
+
       audioCtx = new AudioContext();
 
       track = null;
@@ -31,14 +33,17 @@ const audio = () => {
       source.connect(gainNode);
 
       source.start(0, timestamp);
+      this.startInterval();
     },
     unpause() {
       if (audioCtx) {
         audioCtx.resume();
+        this.startInterval();
       }
     },
     pause() {
       if (audioCtx) {
+        this.stopIntervalIfActive();
         audioCtx.suspend();
       }
     },
@@ -86,6 +91,19 @@ const audio = () => {
 
       ctx.closePath();
       ctx.fill();
+    },
+    stopIntervalIfActive() {
+      if (interval) {
+        window.clearInterval(interval);
+      }
+    },
+    startInterval() {
+      this.stopIntervalIfActive();
+
+      window.setInterval(
+        () => this.onTimestampChange(audioCtx.currentTime, buffer.duration),
+        200
+      );
     },
   };
 };
