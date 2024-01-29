@@ -22,7 +22,7 @@ const defaultFeeds = [
     url: "https://feeds.megaphone.fm/lateralcast",
   },
   { name: "RadioLab", url: "https://feeds.simplecast.com/EmVW7VGp" },
-  { name: "RealPython", url: "https://realpython.com/podcasts/rpp/feed/" },
+  { name: "RealPython", url: "https://realpython.com/podcasts/rpp/feed" },
   {
     name: "Podcast of unnecessary detail",
     url: "https://feeds.acast.com/public/shows/61deed94f2acc80013aab8aa",
