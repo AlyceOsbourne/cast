@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Podcast Player</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.scss" />
     <script type="module" src="script.js"></script>
   </head>
   <body>
@@ -19,7 +19,7 @@
           <select id="feedSelector">
             <!-- Options will be populated by JavaScript -->
           </select>
-          <button onclick="removeCurrentFeed()">Remove Selected Feed</button>
+          <button id="deleteCurrentFeedButton">Remove Selected Feed</button>
         </div>
         <div id="episodesList">Select a feed to load episodes...</div>
 

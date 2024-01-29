@@ -1,3 +1,5 @@
+@use "sass:color";
+
 :root {
   --bg-color: #121212;
   --accent-color: #ff6f00;
@@ -116,53 +118,60 @@ body {
   border: 2px solid var(--accent-color);
   flex-basis: 0;
   flex-grow: 1;
+
+  div {
+    padding: 8px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    transition: background 0.3s ease;
+    display: grid;
+    grid-template-columns: 0.05fr 0.15fr 1fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+
+    &:hover {
+      background: var(--shaded-color);
+    }
+
+    a {
+      color: var(--accent-color);
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &.played {
+      color: color.scale($color: #fff, $lightness: -50%);
+      a {
+        color: color.scale($color: #ff8c00, $lightness: -50%);
+      }
+    }
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bg-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 4px;
+
+    &:hover {
+      background: #ff8c00;
+    }
+  }
 }
 
-#episodesList div {
-  padding: 8px;
-  margin-bottom: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
-  transition: background 0.3s ease;
-  display: grid;
-  grid-template-columns: 0.05fr 0.15fr 1fr;
-  grid-template-rows: 1fr;
-  align-items: center;
-}
-
-#episodesList div:hover {
-  background: var(--shaded-color);
-}
-
-#episodesList a {
-  color: var(--accent-color);
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-#episodesList a:hover {
-  text-decoration: underline;
-}
-
-#episodesList::-webkit-scrollbar {
-  width: 8px;
-}
-
-#episodesList::-webkit-scrollbar-track {
-  background: var(--bg-color);
-}
-
-#episodesList::-webkit-scrollbar-thumb {
-  background: var(--accent-color);
-  border-radius: 4px;
-}
-
-#episodesList::-webkit-scrollbar-thumb:hover {
-  background: #ff8c00;
-}
-
-.played {
+.playedIcon {
   color: var(--played-color);
 }
 
@@ -187,17 +196,17 @@ body {
   font-size: 1.5rem;
   text-align: center;
   transition: background 0.3s ease;
-}
 
-#pause > span {
-  display: inline-block;
-  vertical-align: middle;
-  line-height: normal;
-  margin-top: -0.5rem;
-}
+  & > span {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    margin-top: -0.5rem;
+  }
 
-#pause:hover {
-  background: var(--shaded-color);
+  &:hover {
+    background: var(--shaded-color);
+  }
 }
 
 #waveform {
@@ -235,28 +244,28 @@ body {
   border-radius: 5px;
   background: var(--shaded-color);
   outline: 2px solid var(--accent-color);
-}
 
-#volume::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
-  appearance: none;
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: var(--accent-color);
-  cursor: pointer; /* Cursor on hover */
-  border-radius: 25px;
-  border: none;
-  outline: none;
-}
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: var(--accent-color);
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 25px;
+    border: none;
+    outline: none;
+  }
 
-#volume::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  background: var(--accent-color);
-  cursor: pointer;
-  border-radius: 25px;
-  border: none;
-  outline: none;
+  &::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: var(--accent-color);
+    cursor: pointer;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+  }
 }
 
 #loading-wheel {

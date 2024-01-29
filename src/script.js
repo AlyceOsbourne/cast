@@ -42,6 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("change", fetchSelectedFeed);
   fetchSelectedFeed();
 
+  document
+    .getElementById("deleteCurrentFeedButton")
+    .addEventListener("click", removeCurrentFeed);
+
   const pauseButton = document.querySelector("#pause");
   pauseButton.addEventListener("click", () => {
     if (paused) {
@@ -189,13 +193,14 @@ function displayEpisodes(xmlDoc, channelTitle) {
     const enclosure = item.getElementsByTagName("enclosure")[0];
     const audioUrl = enclosure ? enclosure.getAttribute("url") : null;
 
-    const playedClass = localStorage.getItem(audioUrl)
-      ? html.span({ className: "played", textContent: "\u{10004}" })
-      : html.span({ className: "played", textContent: "\xa0" });
+    const played = localStorage.getItem(audioUrl);
+    const playedIcon = played
+      ? html.span({ className: "playedIcon", textContent: "✔" })
+      : html.span({ className: "playedIcon", textContent: "\xa0" });
     if (title && audioUrl) {
-      const div = html.div({});
+      const div = html.div({ className: played ? "played" : "" });
       div.replaceChildren(
-        playedClass,
+        playedIcon,
         formattedDuration ? html.span({ textContent: formattedDuration }) : "",
         html.a({
           href: "#",
@@ -257,7 +262,7 @@ function markAsPlayed() {
     links.forEach((link) => {
       if (link.getAttribute("onclick").includes(currentEpisodeUrl)) {
         link.parentElement.firstElementChild.replaceChildren(
-          html.span({ class: "played", textContent: "\u{10004}" })
+          html.span({ class: "played", textContent: "✔" })
         );
       }
     });
