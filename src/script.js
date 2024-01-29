@@ -1,5 +1,9 @@
 import html from "./htmllib";
-import audio from "./audio";
+import createAudio from "./audio";
+
+const audio = createAudio(
+  Number.parseFloat(localStorage.getItem("volume") ?? "1.0")
+);
 
 let currentEpisodeUrl = "";
 
@@ -51,8 +55,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.querySelector("#volume").addEventListener("input", (ev) => {
+  const volumeWidget = document.querySelector("#volume");
+
+  volumeWidget.value = audio.getVolume();
+  volumeWidget.addEventListener("input", (ev) => {
     audio.setVolume(ev.currentTarget.value);
+  });
+  volumeWidget.addEventListener("change", (ev) => {
+    localStorage.setItem("volume", ev.target.value);
   });
 
   const timestampWidget = document.querySelector("#timestamp");
@@ -69,6 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector("#addFeedButton").addEventListener("click", addFeed);
+
+  audio.addEventListener("ended", markAsPlayed);
 });
 
 function getNextProxy() {

@@ -1,4 +1,4 @@
-const audio = () => {
+const audio = (volume) => {
   let audioCtx = null;
   let buffer = null;
   let source = null;
@@ -35,13 +35,17 @@ const audio = () => {
       source.buffer = buffer;
 
       gainNode = audioCtx.createGain();
-      gainNode.gain.value = 1.0;
+      gainNode.gain.value = volume;
       gainNode.connect(audioCtx.destination);
 
       source.connect(gainNode);
 
       timeOffset = audioCtx.currentTime - timestamp * buffer.duration;
       source.start(0, timestamp * buffer.duration);
+
+      source.addEventListener("ended", () => {
+        this.dispatchEvent(Object.assign(new Event("ended"), {}));
+      });
 
       this.startInterval();
     },
@@ -59,10 +63,14 @@ const audio = () => {
         audioCtx.suspend();
       }
     },
-    setVolume(volume) {
-      if (audioCtx) {
+    setVolume(newVolume) {
+      volume = newVolume;
+      if (gainNode) {
         gainNode.gain.value = volume;
       }
+    },
+    getVolume() {
+      return volume;
     },
     renderWaveform(canvas) {
       let rect = canvas.getBoundingClientRect();
@@ -130,4 +138,4 @@ const audio = () => {
   });
 };
 
-export default audio();
+export default audio;
