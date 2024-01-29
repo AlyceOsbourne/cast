@@ -194,9 +194,9 @@ function displayEpisodes(xmlDoc, channelTitle) {
     const audioUrl = enclosure ? enclosure.getAttribute("url") : null;
 
     const played = localStorage.getItem(audioUrl);
-    const playedIcon = played
-      ? html.span({ className: "playedIcon", textContent: "✔" })
-      : html.span({ className: "playedIcon", textContent: "\xa0" });
+    const playedIcon = html.span({
+      className: "playedIcon",
+    });
     if (title && audioUrl) {
       const div = html.div({
         className: played ? "played" : "",

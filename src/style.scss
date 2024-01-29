@@ -145,10 +145,18 @@ body {
       }
     }
 
+    .playedIcon::before {
+      content: "\a0";
+    }
+
     &.played {
       color: color.scale($color: #fff, $lightness: -50%);
       a {
         color: color.scale($color: #ff8c00, $lightness: -50%);
+      }
+
+      .playedIcon:before {
+        content: "✔";
       }
     }
   }
