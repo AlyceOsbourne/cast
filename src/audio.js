@@ -44,7 +44,9 @@ const audio = (volume) => {
       source.start(0, timestamp * buffer.duration);
 
       source.addEventListener("ended", () => {
-        this.dispatchEvent(Object.assign(new Event("ended"), {}));
+        if (audioCtx.currentTime - timeOffset >= buffer.duration) {
+          this.dispatchEvent(Object.assign(new Event("ended"), {}));
+        }
       });
 
       this.startInterval();

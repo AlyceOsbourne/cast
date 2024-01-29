@@ -198,7 +198,12 @@ function displayEpisodes(xmlDoc, channelTitle) {
       ? html.span({ className: "playedIcon", textContent: "✔" })
       : html.span({ className: "playedIcon", textContent: "\xa0" });
     if (title && audioUrl) {
-      const div = html.div({ className: played ? "played" : "" });
+      const div = html.div({
+        className: played ? "played" : "",
+        dataset: {
+          url: audioUrl,
+        },
+      });
       div.replaceChildren(
         playedIcon,
         formattedDuration ? html.span({ textContent: formattedDuration }) : "",
@@ -258,14 +263,9 @@ function playEpisode(url) {
 function markAsPlayed() {
   if (currentEpisodeUrl) {
     localStorage.setItem(currentEpisodeUrl, "played");
-    const links = document.querySelectorAll("#episodesList a");
-    links.forEach((link) => {
-      if (link.getAttribute("onclick").includes(currentEpisodeUrl)) {
-        link.parentElement.firstElementChild.replaceChildren(
-          html.span({ class: "played", textContent: "✔" })
-        );
-      }
-    });
+    const selector = `div[data-url="${CSS.escape(currentEpisodeUrl)}"]`;
+    const link = document.querySelector(selector);
+    link.classList.add("played");
   }
 }
 
