@@ -15,6 +15,7 @@ const CORS_PROXIES = [
 ];
 let currentProxyIndex = 0;
 let paused = true;
+const xlinkNamespace = "http://www.w3.org/1999/xlink";
 
 const defaultFeeds = [
   {
@@ -46,15 +47,25 @@ document.addEventListener("DOMContentLoaded", () => {
     .getElementById("deleteCurrentFeedButton")
     .addEventListener("click", removeCurrentFeed);
 
-  const pauseButton = document.querySelector("#pause");
+  const pauseButton = document.querySelector("#pauseButton");
   pauseButton.addEventListener("click", () => {
+    const use = pauseButton.firstElementChild.firstElementChild;
+
     if (paused) {
       audio.unpause();
-      pauseButton.firstElementChild.textContent = "⏵";
+      use.setAttributeNS(
+        xlinkNamespace,
+        "href",
+        new URL("./icons/pause.svg", import.meta.url) + "#pause"
+      );
       paused = false;
     } else {
       audio.pause();
-      pauseButton.firstElementChild.textContent = "⏸";
+      use.setAttributeNS(
+        xlinkNamespace,
+        "href",
+        new URL("./icons/play.svg", import.meta.url) + "#play"
+      );
       paused = true;
     }
   });
