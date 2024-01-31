@@ -26,17 +26,21 @@ body {
   font-family: "Arial", sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
-  padding: 1%;
-  max-width: 800px;
-  margin: auto;
   line-height: 1.4;
   overflow: clip;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #container {
-  height: 100vh;
+  height: 90vh;
+  min-width: 60vw;
+  max-width: 80vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  margin: 20px;
 }
 
 #feed {
@@ -188,9 +192,17 @@ body {
   width: 100%;
   margin-top: 10px;
   background: transparent;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 0.4fr 0.1fr;
+  grid-template-rows: 1fr;
+  align-items: center;  
+  justify-items: left;
+  grid-gap: 10%;
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 5%;
+  }
 }
 
 .iconButton {
@@ -256,6 +268,8 @@ body {
   border-radius: 5px;
   background: var(--shaded-color);
   outline: 2px solid var(--accent-color);
+  margin-left: 10px;
+  margin-top: 10px;
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none; /* Override default look */
@@ -311,4 +325,54 @@ body {
 
 svg {
   fill: currentColor;
+}
+
+.autoPlayContainer{
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.autoPlayContainer label{
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+
+#autoPlay{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+}
+
+#autoPlayInput[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+background: var(--shaded-color);
+outline: 2px solid var(--accent-color);
+cursor: pointer;
+margin-left: 10px;
+}
+
+
+#autoPlayInput[type="checkbox"]:checked ~ #autoPlayIcon path {
+  fill: var(--accent-color);
+}
+
+#autoPlayIcon {
+    transition: fill 0.3s ease;
+    position: relative;
+    width: 38px;
+    left: -28px;
+    top: -6px;
+    z-index: -1;
+}
+
+#autoPlayIcon path {
+  fill: transparent;
 }
