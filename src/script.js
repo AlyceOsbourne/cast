@@ -49,25 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const pauseButton = document.querySelector("#pauseButton");
   pauseButton.addEventListener("click", () => {
-    const use = pauseButton.firstElementChild.firstElementChild;
-
     if (paused) {
       audio.unpause();
-      use.setAttributeNS(
-        xlinkNamespace,
-        "href",
-        new URL("./icons/pause.svg", import.meta.url) + "#pause"
-      );
       paused = false;
     } else {
       audio.pause();
-      use.setAttributeNS(
-        xlinkNamespace,
-        "href",
-        new URL("./icons/play.svg", import.meta.url) + "#play"
-      );
       paused = true;
     }
+
+    updatePauseButtonIcon();
   });
 
   const volumeWidget = document.querySelector("#volume");
@@ -97,6 +87,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   audio.addEventListener("ended", markAsPlayed);
 });
+
+function updatePauseButtonIcon() {
+  const use = pauseButton.firstElementChild.firstElementChild;
+  use.setAttributeNS(
+    xlinkNamespace,
+    "href",
+    paused
+      ? new URL("./icons/play.svg", import.meta.url) + "#play"
+      : new URL("./icons/pause.svg", import.meta.url) + "#pause"
+  );
+}
 
 function getNextProxy() {
   currentProxyIndex = (currentProxyIndex + 1) % CORS_PROXIES.length;
@@ -251,8 +252,9 @@ function playEpisode(url) {
 
       currentEpisodeUrl = url;
       paused = false;
-
       audio.unpause();
+
+      updatePauseButtonIcon();
 
       let oneSecondPlayed = false;
       const onTimeUpdate = ({ offset }) => {
