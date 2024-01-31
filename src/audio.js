@@ -1,5 +1,5 @@
 const audio = (volume) => {
-  let audioCtx = null;
+  let audioCtx = new AudioContext();
   let buffer = null;
   let source = null;
 
@@ -16,8 +16,6 @@ const audio = (volume) => {
       if (audioCtx) {
         audioCtx.suspend();
       }
-
-      audioCtx = new AudioContext();
 
       const response = await fetch(filename);
       buffer = await audioCtx.decodeAudioData(await response.arrayBuffer());

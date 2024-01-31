@@ -17,6 +17,11 @@ let currentProxyIndex = 0;
 let paused = true;
 const xlinkNamespace = "http://www.w3.org/1999/xlink";
 
+const episodeQueue = {
+  explicit: [],
+  implicit: [],
+};
+
 const defaultFeeds = [
   {
     name: "Lateral with Tom Scott",
@@ -84,8 +89,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector("#addFeedButton").addEventListener("click", addFeed);
+  document
+    .querySelector("#backToStartButton")
+    .addEventListener("click", () => audio.playFromTimestamp(0));
+  document
+    .querySelector("#nextTrackButton")
+    .addEventListener("click", nextTrack);
 
   audio.addEventListener("ended", markAsPlayed);
+  audio.addEventListener("ended", nextTrack);
 });
 
 function updatePauseButtonIcon() {
@@ -193,17 +205,19 @@ async function fetchSelectedFeed() {
 
 function displayEpisodes(xmlDoc, channelTitle) {
   let items = xmlDoc.getElementsByTagName("item");
-  items = Array.from(items).reverse();
+  items = Array.from(items).map((item) => {
+    const enclosure = item.getElementsByTagName("enclosure")[0];
+    return {
+      title: item.getElementsByTagName("title")[0]?.textContent,
+      duration: item.getElementsByTagName("itunes:duration")[0]?.textContent,
+      audioUrl: enclosure ? enclosure.getAttribute("url") : null,
+    };
+  });
 
   let htmlContent = [html.h2({ textContent: channelTitle })];
 
-  for (let item of items) {
-    const title = item.getElementsByTagName("title")[0]?.textContent;
-    const duration =
-      item.getElementsByTagName("itunes:duration")[0]?.textContent;
+  items.forEach(({ title, duration, audioUrl }, index) => {
     const formattedDuration = formatDuration(duration);
-    const enclosure = item.getElementsByTagName("enclosure")[0];
-    const audioUrl = enclosure ? enclosure.getAttribute("url") : null;
 
     const played = localStorage.getItem(audioUrl);
     const playedIcon = html.span({
@@ -221,13 +235,19 @@ function displayEpisodes(xmlDoc, channelTitle) {
         formattedDuration ? html.span({ textContent: formattedDuration }) : "",
         html.a({
           href: "#",
-          onclick: () => playEpisode(audioUrl),
+          onclick: () => {
+            episodeQueue.implicit = items
+              .slice(0, index)
+              .reverse()
+              .map((i) => i.audioUrl);
+            playEpisode(audioUrl);
+          },
           textContent: title,
         })
       );
       htmlContent.push(div);
     }
-  }
+  });
 
   document.getElementById("episodesList").replaceChildren(
     ...(htmlContent.length > 0
@@ -243,6 +263,7 @@ function playEpisode(url) {
   const canvas = document.querySelector("#waveform");
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  audio.pause();
   audio
     .switchTrack(url)
     .then((duration) => {
@@ -310,4 +331,28 @@ function formatNumericalDuration(duration) {
       .toString()
       .padStart(2, "0")}`;
   }
+}
+
+function popNextEpisodeUrl() {
+  if (episodeQueue.explicit.length > 0) {
+    return { type: "explicit", url: episodeQueue.explicit.shift() };
+  } else {
+    return { type: "implicit", url: episodeQueue.implicit.shift(0) };
+  }
+}
+
+function nextTrack() {
+  const autoPlay = document.querySelector("#autoPlayInput").checked;
+
+  const nextEpisode = popNextEpisodeUrl();
+
+  if (nextEpisode.type === "implicit" && !autoPlay) {
+    return;
+  }
+
+  if (nextEpisode.url === null) {
+    return;
+  }
+
+  playEpisode(nextEpisode.url);
 }
