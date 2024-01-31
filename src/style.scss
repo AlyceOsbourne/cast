@@ -91,11 +91,26 @@ body {
 #feedSelector {
   padding: 8px;
   border-radius: 5px;
-  background: var(--bg-color);
+  background: var(--shaded-color);
   color: var(--text-color);
   margin-right: 10px;
   width: calc(100% - 120px);
   border: 2px solid var(--accent-color);
+}
+
+#feedSelector option {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+#feedSelector option:hover {
+  background: var(--accent-color);
+  color: var(--bg-color);
+}
+
+#feedSelector option:checked {
+  background: var(--bg-color);
+  color: var(--accent-color);
 }
 
 #feedControls button {
