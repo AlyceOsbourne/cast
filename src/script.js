@@ -4,7 +4,7 @@ import createAudio from "./audio";
 const audio = createAudio(
   Number.parseFloat(localStorage.getItem("volume") ?? "1.0")
 );
-audio.setAttribute('preload', "auto");
+
 let currentEpisodeUrl = "";
 
 const CORS_PROXIES = [
