@@ -33,16 +33,40 @@
           </span>
         </div>
         <div id="audioWidget">
-          <button id="pauseButton">
-            <svg>
-              <use
-                xlink:href="icons/play.svg#play"
-                width="100%"
-                height="100%"
-              ></use>
-            </svg>
-          </button>
+          <div class="playerControls">
+            <button id="backToStartButton" class="iconButton">
+              <svg>
+                <use
+                  xlink:href="icons/backToStart.svg#backToStart"
+                  width="100%"
+                  height="100%"
+                ></use>
+              </svg>
+            </button>
+            <button id="pauseButton" class="iconButton">
+              <svg>
+                <use
+                  xlink:href="icons/play.svg#play"
+                  width="100%"
+                  height="100%"
+                ></use>
+              </svg>
+            </button>
+            <button id="nextTrackButton" class="iconButton">
+              <svg>
+                <use
+                  xlink:href="icons/nextTrack.svg#nextTrack"
+                  width="100%"
+                  height="100%"
+                ></use>
+              </svg>
+            </button>
+          </div>
           <div><span id="timestamp"></span> / <span id="duration"></span></div>
+          <div>
+            <input type="checkbox" id="autoPlayInput" />
+            <label for="autoPlayInput">Auto play</label>
+          </div>
           <input
             type="range"
             id="volume"

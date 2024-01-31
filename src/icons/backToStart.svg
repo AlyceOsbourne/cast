@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 2 2" id="backToStart">
+    <path d="M 0.2 -1 L -1 0 L 0.2 1 Z" />
+    <path d="M 1 -1 L -0.2 0 L 1 1 Z" />
+    <path d="M -0.6 -1 L -1 -1 L -1 1 L -0.6 1 Z" />
+</svg>
