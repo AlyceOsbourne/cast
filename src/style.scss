@@ -210,7 +210,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 0.5fr 0.4fr 0.1fr;
   grid-template-rows: 1fr;
-  align-items: center;  
+  align-items: center;
   justify-items: left;
   grid-gap: 10%;
   @media (max-width: 800px) {
@@ -342,24 +342,24 @@ svg {
   fill: currentColor;
 }
 
-.autoPlayContainer{
+.autoPlayContainer {
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.autoPlayContainer label{
+.autoPlayContainer label {
   position: relative;
   align-items: center;
   justify-content: center;
 }
 
-#autoPlay{
-    position: absolute;
-    display: flex;
-    align-items: center;
-    padding: 8px;
+#autoPlay {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  padding: 8px;
 }
 
 #autoPlayInput[type="checkbox"] {
@@ -368,26 +368,25 @@ svg {
   width: 20px;
   height: 20px;
   border-radius: 5px;
-background: var(--shaded-color);
-outline: 2px solid var(--accent-color);
-cursor: pointer;
-margin-left: 10px;
-}
+  background: var(--shaded-color);
+  outline: 2px solid var(--accent-color);
+  cursor: pointer;
+  margin-left: 10px;
 
+  &:checked ~ #autoPlayIcon path {
+    fill: var(--accent-color);
+  }
 
-#autoPlayInput[type="checkbox"]:checked ~ #autoPlayIcon path {
-  fill: var(--accent-color);
-}
-
-#autoPlayIcon {
+  #autoPlayIcon {
     transition: fill 0.3s ease;
     position: relative;
     width: 38px;
     left: -28px;
     top: -6px;
     z-index: -1;
-}
 
-#autoPlayIcon path {
-  fill: transparent;
+    path {
+      fill: transparent;
+    }
+  }
 }
