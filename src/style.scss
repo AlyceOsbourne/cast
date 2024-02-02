@@ -146,9 +146,14 @@ body {
     border-radius: 5px;
     transition: background 0.3s ease;
     display: grid;
-    grid-template-columns: 0.05fr 0.15fr 1fr;
+    grid-template-columns: 2rem 4rem 1fr;
     grid-template-rows: 1fr;
     align-items: center;
+    gap: 1rem;
+
+    > span:nth-child(2) {
+      text-align: right;
+    }
 
     &:hover {
       background: var(--shaded-color);
