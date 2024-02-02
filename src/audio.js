@@ -107,14 +107,20 @@ const audio = (volume) => {
         ctx.lineTo(
           i,
           rect.height * 0.5 -
-            Math.max(getNormalizedPos(i), getNormalizedPos(i + 1)) / max
+            Math.max(
+              Math.max(getNormalizedPos(i), getNormalizedPos(i + 1)) / max,
+              1
+            )
         );
       }
       for (let i = rect.width - 1; i >= 0; i -= 2) {
         ctx.lineTo(
           i,
           rect.height * 0.5 +
-            Math.max(getNormalizedPos(i), getNormalizedPos(i + 1)) / max
+            Math.max(
+              Math.max(getNormalizedPos(i), getNormalizedPos(i + 1)) / max,
+              1
+            )
         );
       }
 
