@@ -210,7 +210,7 @@ function displayEpisodes(xmlDoc, channelTitle) {
       });
       div.replaceChildren(
         playedIcon,
-        formattedDuration ? html.span({ textContent: formattedDuration }) : "",
+        html.span({ textContent: formattedDuration }),
         html.a({
           href: "#",
           onclick: () => {
@@ -282,7 +282,7 @@ function markAsPlayed() {
 }
 
 function formatDuration(duration) {
-  if (!duration) return "";
+  if (!duration) return "--:--";
   const parts = duration.split(":").map((part) => parseInt(part, 10));
   if (parts.length === 3) {
     return `${parts[0]}:${parts[1].toString().padStart(2, "0")}:${parts[2]
