@@ -1,3 +1,5 @@
+import corsFetch from "./cors";
+
 const audio = (volume) => {
   let audioCtx = new AudioContext();
   let buffer = null;
@@ -17,7 +19,7 @@ const audio = (volume) => {
         audioCtx.suspend();
       }
 
-      const response = await fetch(filename);
+      const response = await corsFetch(filename);
       buffer = await audioCtx.decodeAudioData(await response.arrayBuffer());
 
       this.playFromTimestamp(timestamp);

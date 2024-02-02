@@ -1,5 +1,6 @@
 import html from "./htmllib";
 import createAudio from "./audio";
+import corsFetch from "./cors";
 
 const audio = createAudio(
   Number.parseFloat(localStorage.getItem("volume") ?? "1.0")
@@ -7,13 +8,6 @@ const audio = createAudio(
 
 let currentEpisodeUrl = "";
 
-const CORS_PROXIES = [
-  "https://jwt.mousetail.nl/proxy/cors?url=",
-  // "https://api.allorigins.win/raw?url=",
-  // "https://cors.bridged.cc/",
-  // "https://cors-anywhere.herokuapp.com/",
-];
-let currentProxyIndex = 0;
 let paused = true;
 const xlinkNamespace = "http://www.w3.org/1999/xlink";
 
@@ -111,11 +105,6 @@ function updatePauseButtonIcon() {
   );
 }
 
-function getNextProxy() {
-  currentProxyIndex = (currentProxyIndex + 1) % CORS_PROXIES.length;
-  return CORS_PROXIES[currentProxyIndex];
-}
-
 function addFeed() {
   const name = document.getElementById("feedName").value.trim();
   const url = document.getElementById("feedUrl").value.trim();
@@ -177,30 +166,19 @@ async function fetchSelectedFeed() {
   const selectedFeed = RSS_FEED_URLS[selectedIndex];
   const episodesList = document.getElementById("episodesList");
   episodesList.textContent = "Loading...";
-  for (const _ of CORS_PROXIES) {
-    try {
-      const response = await fetch(
-        `${CORS_PROXIES[currentProxyIndex]}${encodeURIComponent(
-          selectedFeed.url
-        )}`,
-        {
-          mode: "cors",
-          cache: "force-cache",
-        }
-      );
-      if (!response.ok) throw new Error("Failed to fetch RSS feed");
-      const data = await response.text();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(data, "text/xml");
-      displayEpisodes(xmlDoc, selectedFeed.name);
-      return;
-    } catch (error) {
-      console.error("Error fetching the RSS feed:", error);
-      getNextProxy();
-    }
-  }
+  try {
+    const response = await corsFetch(selectedFeed.url, {
+      cache: "force-cache",
+    });
 
-  episodesList.textContent = `Failed to load episodes from ${selectedFeed.name} using all available proxies.`;
+    const data = await response.text();
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(data, "text/xml");
+    displayEpisodes(xmlDoc, selectedFeed.name);
+  } catch (ex) {
+    console.error(ex);
+    episodesList.textContent = `Failed to load episodes from ${selectedFeed.name} using all available proxies.`;
+  }
 }
 
 function displayEpisodes(xmlDoc, channelTitle) {
