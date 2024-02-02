@@ -207,17 +207,10 @@ body {
   width: 100%;
   margin-top: 10px;
   background: transparent;
-  display: grid;
-  grid-template-columns: 1fr 0.5fr 0.4fr 0.1fr;
-  grid-template-rows: 1fr;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-items: left;
-  grid-gap: 10%;
-  @media (max-width: 800px) {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    grid-gap: 5%;
-  }
+  align-content: center;
 }
 
 .iconButton {
@@ -373,11 +366,11 @@ svg {
   cursor: pointer;
   margin-left: 10px;
 
-  &:checked ~ #autoPlayIcon path {
+  &:checked ~ svg path {
     fill: var(--accent-color);
   }
 
-  #autoPlayIcon {
+  & ~ svg {
     transition: fill 0.3s ease;
     position: relative;
     width: 38px;
