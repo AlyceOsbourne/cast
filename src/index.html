@@ -10,89 +10,92 @@
     <script type="module" src="script.js"></script>
   </head>
   <body>
-    <div id="container">
-      <div id="feed">
-        <div id="addFeed">
-          <input type="text" id="feedName" placeholder="Feed Name" />
-          <input type="text" id="feedUrl" placeholder="Feed URL" />
-          <button id="addFeedButton">Add Feed</button>
-        </div>
-        <div id="feedControls">
-          <select id="feedSelector">
-            <!-- Options will be populated by JavaScript -->
-          </select>
-          <button id="deleteCurrentFeedButton">Remove Selected Feed</button>
-        </div>
-        <div id="episodesList">Select a feed to load episodes...</div>
+    <div class="container">
+      <div id="episodes-column">
+        <div id="feed">
+          <div id="addFeed">
+            <input type="text" id="feedName" placeholder="Feed Name" />
+            <input type="text" id="feedUrl" placeholder="Feed URL" />
+            <button id="addFeedButton">Add Feed</button>
+          </div>
+          <div id="feedControls">
+            <select id="feedSelector">
+              <!-- Options will be populated by JavaScript -->
+            </select>
+            <button id="deleteCurrentFeedButton">Remove Selected Feed</button>
+          </div>
+          <div id="episodesList">Select a feed to load episodes...</div>
 
-        <div class="waveformContainer">
-          <div id="progress"></div>
-          <canvas id="waveform"></canvas>
-          <span id="loading-wheel">
-            <span id="loading" style="display: none"></span>
-          </span>
-        </div>
-        <div id="audioWidget">
-          <div class="playerControls">
-            <button id="backToStartButton" class="iconButton">
-              <svg>
-                <use
-                  xlink:href="icons/backToStart.svg#backToStart"
-                  width="100%"
-                  height="100%"
-                ></use>
-              </svg>
-            </button>
-            <button id="pauseButton" class="iconButton">
-              <svg>
-                <use
-                  xlink:href="icons/play.svg#play"
-                  width="100%"
-                  height="100%"
-                ></use>
-              </svg>
-            </button>
-            <button id="nextTrackButton" class="iconButton">
-              <svg>
-                <use
-                  xlink:href="icons/nextTrack.svg#nextTrack"
-                  width="100%"
-                  height="100%"
-                ></use>
-              </svg>
-            </button>
+          <div class="waveformContainer">
+            <div id="progress"></div>
+            <canvas id="waveform"></canvas>
+            <span id="loading-wheel">
+              <span id="loading" style="display: none"></span>
+            </span>
           </div>
-          <div class="timestampContainer">
-            <span id="timestamp"></span> / <span id="duration"></span>
-          </div>
-          <div class="autoPlayContainer">
-            <div id="autoPlay">
-              <label for="autoPlayInput">Auto play</label>
-              <input type="checkbox" id="autoPlayInput" />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="10%"
-                height="10%"
-                id="autoPlayIcon"
-              >
-                <path
-                  fill="#ffffff"
-                  d="M9 16.17l-4.17-4.17-1.42 1.41 5.59 5.59 12-12-1.41-1.41z"
-                />
-              </svg>
+          <div id="audioWidget">
+            <div class="playerControls">
+              <button id="backToStartButton" class="iconButton">
+                <svg>
+                  <use
+                    xlink:href="icons/backToStart.svg#backToStart"
+                    width="100%"
+                    height="100%"
+                  ></use>
+                </svg>
+              </button>
+              <button id="pauseButton" class="iconButton">
+                <svg>
+                  <use
+                    xlink:href="icons/play.svg#play"
+                    width="100%"
+                    height="100%"
+                  ></use>
+                </svg>
+              </button>
+              <button id="nextTrackButton" class="iconButton">
+                <svg>
+                  <use
+                    xlink:href="icons/nextTrack.svg#nextTrack"
+                    width="100%"
+                    height="100%"
+                  ></use>
+                </svg>
+              </button>
             </div>
+            <div class="timestampContainer">
+              <span id="timestamp"></span> / <span id="duration"></span>
+            </div>
+            <div class="autoPlayContainer">
+              <div id="autoPlay">
+                <label for="autoPlayInput">Auto play</label>
+                <input type="checkbox" id="autoPlayInput" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="10%"
+                  height="10%"
+                  id="autoPlayIcon"
+                >
+                  <path
+                    fill="#ffffff"
+                    d="M9 16.17l-4.17-4.17-1.42 1.41 5.59 5.59 12-12-1.41-1.41z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <input
+              type="range"
+              id="volume"
+              name="volume"
+              min="0"
+              max="1"
+              step="0.05"
+            />
           </div>
-          <input
-            type="range"
-            id="volume"
-            name="volume"
-            min="0"
-            max="1"
-            step="0.05"
-          />
         </div>
       </div>
+      <div class="show-notes-column"></div>
     </div>
   </body>
 </html>

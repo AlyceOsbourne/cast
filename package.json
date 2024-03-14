@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/AlyceOsbourne/cast#readme",
   "dependencies": {
+    "dompurify": "^3.0.9",
     "parcel": "^2.11.0"
   },
   "devDependencies": {

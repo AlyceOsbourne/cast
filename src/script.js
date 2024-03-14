@@ -1,6 +1,7 @@
 import html from "./htmllib";
 import createAudio from "./audio";
 import corsFetch from "./cors";
+import DOMPurify from "dompurify";
 
 const audio = createAudio(
   Number.parseFloat(localStorage.getItem("volume") ?? "1.0")
@@ -188,13 +189,16 @@ function displayEpisodes(xmlDoc, channelTitle) {
     return {
       title: item.getElementsByTagName("title")[0]?.textContent,
       duration: item.getElementsByTagName("itunes:duration")[0]?.textContent,
+      notes: DOMPurify.sanitize(
+        item.getElementsByTagName("content:encoded")[0]?.textContent
+      ),
       audioUrl: enclosure ? enclosure.getAttribute("url") : null,
     };
   });
 
   let htmlContent = [html.h2({ textContent: channelTitle })];
 
-  items.forEach(({ title, duration, audioUrl }, index) => {
+  items.forEach(({ title, duration, audioUrl, notes }, index) => {
     const formattedDuration = formatDuration(duration);
 
     const played = localStorage.getItem(audioUrl);
@@ -214,11 +218,8 @@ function displayEpisodes(xmlDoc, channelTitle) {
         html.a({
           href: "#",
           onclick: () => {
-            episodeQueue.implicit = items
-              .slice(0, index)
-              .reverse()
-              .map((i) => i.audioUrl);
-            playEpisode(audioUrl);
+            episodeQueue.implicit = items.slice(0, index).reverse();
+            playEpisode(audioUrl, notes);
           },
           textContent: title,
         })
@@ -236,7 +237,8 @@ function displayEpisodes(xmlDoc, channelTitle) {
   );
 }
 
-function playEpisode(url) {
+function playEpisode(url, notes) {
+  document.querySelector(".show-notes-column").innerHTML = notes;
   document.querySelector("#loading").style.display = "block";
   const canvas = document.querySelector("#waveform");
   const ctx = canvas.getContext("2d");
@@ -332,5 +334,5 @@ function nextTrack() {
     return;
   }
 
-  playEpisode(nextEpisode.url);
+  playEpisode(...nextEpisode.url);
 }
