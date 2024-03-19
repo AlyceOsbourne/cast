@@ -79,8 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
     timestampWidget.textContent = formatNumericalDuration(offset);
   });
 
-  document.querySelector("#waveform").addEventListener("click", (ev) => {
-    audio.playFromTimestamp(ev.offsetX / ev.target.width);
+  const wavewormWidget = document.querySelector("#waveform");
+  wavewormWidget.addEventListener("click", (ev) => {
+    audio.playFromTimestamp(ev.offsetX / ev.currentTarget.clientWidth);
   });
 
   document.querySelector("#addFeedButton").addEventListener("click", addFeed);
@@ -334,5 +335,5 @@ function nextTrack() {
     return;
   }
 
-  playEpisode(...nextEpisode.url);
+  playEpisode(nextEpisode.url.audioUrl, nextEpisode.url.notes);
 }
