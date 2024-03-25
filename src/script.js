@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
   navigator.mediaSession.setActionHandler('play', ()=>{
     audio.pause()
   });
-  navigator.mediaSession.setActionHandler('seekto', (_, _, _, value)=>{
+  navigator.mediaSession.setActionHandler('seekto', (_ev, _fast, _diff, value)=>{
     audio.playFromTimestamp(value / audio.getDuration() )
   });
 });
