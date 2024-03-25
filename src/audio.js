@@ -27,6 +27,7 @@ const audio = (volume) => {
       return buffer.duration;
     },
     playFromTimestamp(timestamp) {
+      navigator.mediaSession.playbackState = 'playing'
       if (source !== null) {
         source.stop();
       }
@@ -51,7 +52,11 @@ const audio = (volume) => {
 
       this.startInterval();
     },
+    getDuration() {
+      return self.buffer.duration;
+    },
     unpause() {
+      navigator.mediaSession.playbackState = 'playing'
       paused = false;
       if (audioCtx) {
         audioCtx.resume();
@@ -59,6 +64,7 @@ const audio = (volume) => {
       }
     },
     pause() {
+      navigator.mediaSession.playbackState = 'paused'
       paused = true;
       if (audioCtx) {
         this.stopIntervalIfActive();

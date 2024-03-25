@@ -94,6 +94,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   audio.addEventListener("ended", markAsPlayed);
   audio.addEventListener("ended", nextTrack);
+  audio.addEventListener("ended", ()=>{navigator.mediaSession.playbackState='none'});
+
+  navigator.mediaSession.setActionHandler('play', ()=>{
+    audio.unpause()
+  });
+  navigator.mediaSession.setActionHandler('play', ()=>{
+    audio.pause()
+  });
+  navigator.mediaSession.setActionHandler('seekto', (_, _, _, value)=>{
+    audio.playFromTimestamp(value / audio.getDuration() )
+  });
 });
 
 function updatePauseButtonIcon() {
@@ -239,6 +250,10 @@ function displayEpisodes(xmlDoc, channelTitle) {
 }
 
 function playEpisode(url, notes) {
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: url
+  })
+
   document.querySelector(".show-notes-column").innerHTML = notes;
   document.querySelector("#loading").style.display = "block";
   const canvas = document.querySelector("#waveform");
