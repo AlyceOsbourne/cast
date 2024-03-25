@@ -44,6 +44,11 @@ const audio = (volume) => {
       timeOffset = audioCtx.currentTime - timestamp * buffer.duration;
       source.start(0, timestamp * buffer.duration);
 
+      navigator.mediaSession.setPositionState({
+        duration: buffer.duration,
+        position: timeOffset,
+      });
+
       source.addEventListener("ended", () => {
         if (audioCtx.currentTime - timeOffset >= buffer.duration) {
           this.dispatchEvent(Object.assign(new Event("ended"), {}));
