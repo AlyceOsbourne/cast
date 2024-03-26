@@ -46,7 +46,7 @@ const audio = (volume) => {
 
       navigator.mediaSession.setPositionState({
         duration: buffer.duration,
-        position: timeOffset,
+        position: timestamp * buffer.duration,
       });
 
       source.addEventListener("ended", () => {
