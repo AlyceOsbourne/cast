@@ -202,7 +202,7 @@ function displayEpisodes(xmlDoc, channelTitle) {
       title: item.getElementsByTagName("title")[0]?.textContent,
       duration: item.getElementsByTagName("itunes:duration")[0]?.textContent,
       notes: DOMPurify.sanitize(
-        item.getElementsByTagName("content:encoded")[0]?.textContent
+        item.getElementsByTagName("content:encoded")[0]?.textContent ?? item.getElementsByTagName("description")[0]?.textContent
       ),
       audioUrl: enclosure ? enclosure.getAttribute("url") : null,
     };
