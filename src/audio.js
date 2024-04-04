@@ -2,7 +2,7 @@ import corsFetch from "./cors";
 
 const audio = (volume) => {
   let audioCtx = null;
-  handler = ()=>{audioCtx=new AudioContext(); document.removeEventListener('pointerup', handler)}
+  const handler = ()=>{audioCtx=new AudioContext(); document.removeEventListener('pointerup', handler)}
   document.addEventListener('pointerup', handler);
   let buffer = null;
   let source = null;
@@ -58,7 +58,7 @@ const audio = (volume) => {
         }
       });
 
-      silentAudio.play().then(()=>silentAudio.pause())
+      //silentAudio.play().then(()=>silentAudio.pause())
       this.startInterval();
     },
     getDuration() {
@@ -82,7 +82,7 @@ const audio = (volume) => {
         this.stopIntervalIfActive();
         audioCtx.suspend();
       }
-      silentAudio.pause();
+      //silentAudio.pause();
     },
     setVolume(newVolume) {
       volume = newVolume;

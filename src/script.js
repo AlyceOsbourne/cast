@@ -17,6 +17,14 @@ const episodeQueue = {
   implicit: [],
 };
 
+
+let silentAudio = document.getElementById('silent-audio');
+let evHandler = ()=>{
+  silentAudio.play();
+  document.removeEventListener('pointerup', evHandler);
+}
+document.addEventListener('pointerup', evHandler);
+
 const defaultFeeds = [
   {
     name: "Lateral with Tom Scott",
