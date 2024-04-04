@@ -1,7 +1,8 @@
 import corsFetch from "./cors";
 
 const audio = (volume) => {
-  let audioCtx = new AudioContext();
+  let audioCtx = null;
+  document.addEventListener('pointerup', ()=>audioCtx=new AudioContext());
   let buffer = null;
   let source = null;
 
