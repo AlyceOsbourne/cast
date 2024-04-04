@@ -11,6 +11,7 @@ const audio = (volume) => {
 
   let timeOffset = 0;
   let paused = false;
+  let silentAudio = document.getElementById('silent-audio');
 
   let out = new EventTarget();
 
@@ -56,13 +57,15 @@ const audio = (volume) => {
         }
       });
 
+      silentAudio.play();
       this.startInterval();
     },
     getDuration() {
       return self.buffer.duration;
     },
     unpause() {
-      navigator.mediaSession.playbackState = 'playing'
+      navigator.mediaSession.playbackState = 'playing';
+      silentAudio.play();
       paused = false;
       if (audioCtx) {
         audioCtx.resume();
@@ -70,7 +73,8 @@ const audio = (volume) => {
       }
     },
     pause() {
-      navigator.mediaSession.playbackState = 'paused'
+      navigator.mediaSession.playbackState = 'paused';
+      silentAudio.pause();
       paused = true;
       if (audioCtx) {
         this.stopIntervalIfActive();
