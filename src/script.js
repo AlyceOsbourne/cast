@@ -97,12 +97,15 @@ document.addEventListener("DOMContentLoaded", () => {
   audio.addEventListener("ended", ()=>{navigator.mediaSession.playbackState='none'});
 
   navigator.mediaSession.setActionHandler('play', ()=>{
+    console.log("play called")
     audio.unpause()
   });
   navigator.mediaSession.setActionHandler('pause', ()=>{
+    console.log("pause called")
     audio.pause()
   });
   navigator.mediaSession.setActionHandler('stop', ()=>{
+    console.log("stop called")
     audio.pause()
   });
   navigator.mediaSession.setActionHandler('seekto', (_ev, _fast, _diff, value)=>{

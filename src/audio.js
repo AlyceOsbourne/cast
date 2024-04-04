@@ -2,7 +2,8 @@ import corsFetch from "./cors";
 
 const audio = (volume) => {
   let audioCtx = null;
-  document.addEventListener('pointerup', ()=>audioCtx=new AudioContext());
+  handler = ()=>{audioCtx=new AudioContext(); document.removeEventListener('pointerup', handler)}
+  document.addEventListener('pointerup', handler);
   let buffer = null;
   let source = null;
 
@@ -29,7 +30,7 @@ const audio = (volume) => {
       return buffer.duration;
     },
     playFromTimestamp(timestamp) {
-      navigator.mediaSession.playbackState = 'playing'
+      navigator.mediaSession.playbackState = 'playing';
       if (source !== null) {
         source.stop();
       }
@@ -57,29 +58,31 @@ const audio = (volume) => {
         }
       });
 
-      silentAudio.play();
+      silentAudio.play().then(()=>silentAudio.pause())
       this.startInterval();
     },
     getDuration() {
       return self.buffer.duration;
     },
     unpause() {
+      console.log("resume", audioCtx.state, audioCtx.currentTime);
       navigator.mediaSession.playbackState = 'playing';
-      silentAudio.play();
       paused = false;
       if (audioCtx) {
         audioCtx.resume();
         this.startInterval();
+        console.log(audioCtx.state, audioCtx.currentTime);
       }
     },
     pause() {
+      console.log("pausing...", audioCtx.state, audioCtx.currentTime, silentAudio);
       navigator.mediaSession.playbackState = 'paused';
-      silentAudio.pause();
       paused = true;
       if (audioCtx) {
         this.stopIntervalIfActive();
         audioCtx.suspend();
       }
+      silentAudio.pause();
     },
     setVolume(newVolume) {
       volume = newVolume;
@@ -150,6 +153,9 @@ const audio = (volume) => {
     },
     startInterval() {
       this.stopIntervalIfActive();
+      if (buffer == null) {
+        return;
+      }
 
       let f = () =>
         this.dispatchEvent(
