@@ -94,6 +94,8 @@ const audio = (volume) => {
       return volume;
     },
     renderWaveform(canvas) {
+      console.log("rendering waveform");
+      
       let rect = canvas.getBoundingClientRect();
       if (rect.width != canvas.width || rect.height != canvas.height) {
         canvas.width = rect.width;
@@ -127,7 +129,7 @@ const audio = (volume) => {
           i,
           rect.height * 0.5 -
             Math.max(
-              Math.max(getNormalizedPos(i), getNormalizedPos(i + 1)) / max,
+              Math.max(getNormalizedPos(i), getNormalizedPos(i + 0.5), getNormalizedPos(i + 1)) / max,
               1
             )
         );
@@ -137,7 +139,7 @@ const audio = (volume) => {
           i,
           rect.height * 0.5 +
             Math.max(
-              Math.max(getNormalizedPos(i), getNormalizedPos(i + 1)) / max,
+              Math.max(getNormalizedPos(i), getNormalizedPos(i + 0.5), getNormalizedPos(i + 1)) / max,
               1
             )
         );
