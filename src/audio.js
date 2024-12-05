@@ -114,10 +114,19 @@ const audio = (volume) => {
 
       let rawBuffer = buffer.getChannelData(0);
 
-      let getPos = (i) =>
-        Math.abs(rawBuffer[Math.floor((i * rawBuffer.length) / rect.width)]);
+      const getPos = (i) =>
+        Math.abs(rawBuffer[Math.floor(i)]);
 
-      let getNormalizedPos = (i) => getPos(i) * (rect.height * 0.5);
+      const getNormalizedPos = (i) => getPos(i) * (rect.height * 0.5);
+
+      const maxValue = (i) => {
+        let value = 0;
+        let start_value = i / rect.width * rawBuffer.length
+        for (let j=start_value; j<(i+1) / rect.width * rawBuffer.length; j++) {
+          value = Math.max(value, getNormalizedPos(j));
+        }
+        return value;
+      }
 
       let max = 0;
       for (let i = 0; i < rect.width; i += 2) {
@@ -128,20 +137,14 @@ const audio = (volume) => {
         ctx.lineTo(
           i,
           rect.height * 0.5 -
-            Math.max(
-              Math.max(getNormalizedPos(i), getNormalizedPos(i + 0.5), getNormalizedPos(i + 1)) / max,
-              1
-            )
+            maxValue(i) / max
         );
       }
       for (let i = rect.width - 1; i >= 0; i -= 2) {
         ctx.lineTo(
           i,
           rect.height * 0.5 +
-            Math.max(
-              Math.max(getNormalizedPos(i), getNormalizedPos(i + 0.5), getNormalizedPos(i + 1)) / max,
-              1
-            )
+            maxValue(i) / max
         );
       }
 
