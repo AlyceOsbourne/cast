@@ -116,11 +116,13 @@ const audio = (volume) => {
 
       const maxValue = (i) => {
         let value = 0;
+        let num=0;
         let start_value = i / rect.width * rawBuffer.length
         for (let j = start_value; j<=(i+1) / rect.width * rawBuffer.length; j++) {
-          value = Math.max(value, getPos(j));
+          value+=value;
+          num+=1;
         }
-        return value;
+        return value / num;
       }
 
       let max = 0.01;
