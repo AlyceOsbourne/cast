@@ -111,7 +111,7 @@ const audio = (volume) => {
 
       const getPos = (i) => {
         const v = Math.abs(rawBuffer[Math.floor(i)]);
-        return Math.isNaN(v) ? 0 : v
+        return Number.isNaN(v) ? 0 : v
       };
 
       const maxValue = (i) => {
