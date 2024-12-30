@@ -109,8 +109,10 @@ const audio = (volume) => {
 
       const rawBuffer = buffer.getChannelData(0);
 
-      const getPos = (i) =>
-        Math.abs(rawBuffer[Math.floor(i)]);
+      const getPos = (i) => {
+        const v = Math.abs(rawBuffer[Math.floor(i)]);
+        return Math.isNaN(v) ? 0 : v
+      };
 
       const maxValue = (i) => {
         let value = 0;
