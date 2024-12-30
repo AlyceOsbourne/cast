@@ -127,8 +127,8 @@ const audio = (volume) => {
       }
 
       let max = 0.01;
-      for (let i = 0; i < rect.width; i++) {
-        max = Math.max(getPos(i / rect.width * rawBuffer.length), max);
+      for (let i = 0; i < rect.width; i+=2) {
+        max = Math.max(maxValue(i), max);
       }
 
       console.log(`Max = ${max}`);
