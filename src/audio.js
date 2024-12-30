@@ -106,11 +106,6 @@ const audio = (volume) => {
       let color = getComputedStyle(document.documentElement).getPropertyValue(
         "--accent-color"
       );
-      ctx.fillStyle = color;
-      ctx.clearRect(0, 0, rect.width, rect.height);
-
-      ctx.beginPath();
-      ctx.moveTo(0, rect.height / 2);
 
       const rawBuffer = buffer.getChannelData(0);
 
@@ -128,28 +123,36 @@ const audio = (volume) => {
 
       let max = 0.01;
       for (let i = 0; i < rect.width; i+=2) {
-        max = Math.max(maxValue(i), max);
+        max = Math.max(maxValue(i) * 1.2, max);
       }
-
+      
       console.log(`Max = ${max}`);
-
-      for (let i = 0; i < rect.width; i += 2) {
-        ctx.lineTo(
-          i,
-          rect.height * 0.5 -
-            maxValue(i) * (rect.height * 0.5) / max
-        );
-      }
-      for (let i = rect.width - 1; i >= 0; i -= 2) {
-        ctx.lineTo(
-          i,
-          rect.height * 0.5 +
-            maxValue(i) * (rect.height * 0.5) / max
-        );
-      }
-
-      ctx.closePath();
-      ctx.fill();
+      
+      Promise.resolve().then(() => {
+        ctx.fillStyle = color;
+        ctx.clearRect(0, 0, rect.width, rect.height);
+  
+        ctx.beginPath();
+        ctx.moveTo(0, rect.height / 2);
+        
+        for (let i = 0; i < rect.width; i += 2) {
+          ctx.lineTo(
+            i,
+            rect.height * 0.5 -
+              maxValue(i) * (rect.height * 0.5) / max
+          );
+        }
+        for (let i = rect.width - 1; i >= 0; i -= 2) {
+          ctx.lineTo(
+            i,
+            rect.height * 0.5 +
+              maxValue(i) * (rect.height * 0.5) / max
+          );
+        }
+  
+        ctx.closePath();
+        ctx.fill();
+      });
     },
     stopIntervalIfActive() {
       if (interval) {
