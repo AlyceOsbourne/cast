@@ -112,7 +112,7 @@ const audio = (volume) => {
       ctx.beginPath();
       ctx.moveTo(0, rect.height / 2);
 
-      let rawBuffer = buffer.getChannelData(0);
+      const rawBuffer = buffer.getChannelData(0);
 
       const getPos = (i) =>
         Math.abs(rawBuffer[Math.floor(i)]);
@@ -127,8 +127,8 @@ const audio = (volume) => {
       }
 
       let max = 0.01;
-      for (let i = 0; i < rect.width; i += 2) {
-        max = Math.max(getPos(i), getPos(i + 1), max);
+      for (let i = 0; i < rect.width; i++) {
+        max = Math.max(getPos(i / rect.width * rawBuffer.length), max);
       }
 
       console.log(`Max = ${max}`);
