@@ -119,7 +119,7 @@ const audio = (volume) => {
         let num=0;
         let start_value = i / rect.width * rawBuffer.length
         for (let j = start_value; j<=(i+1) / rect.width * rawBuffer.length; j++) {
-          value+=value;
+          value+=getPos(j);
           num+=1;
         }
         return value / num;
