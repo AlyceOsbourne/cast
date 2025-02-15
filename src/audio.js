@@ -58,7 +58,6 @@ const audio = (volume) => {
         }
       });
 
-      //silentAudio.play().then(()=>silentAudio.pause())
       this.startInterval();
     },
     getDuration() {
@@ -82,7 +81,7 @@ const audio = (volume) => {
         this.stopIntervalIfActive();
         audioCtx.suspend();
       }
-      //silentAudio.pause();
+      silentAudio.pause();
     },
     setVolume(newVolume) {
       volume = newVolume;

@@ -105,15 +105,21 @@ document.addEventListener("DOMContentLoaded", () => {
   audio.addEventListener("ended", ()=>{navigator.mediaSession.playbackState='none'});
 
   navigator.mediaSession.setActionHandler('play', ()=>{
-    console.log("play called")
+    console.log("play called");
+    paused = false;
+    updatePauseButtonIcon();
     audio.unpause()
   });
   navigator.mediaSession.setActionHandler('pause', ()=>{
-    console.log("pause called")
+    console.log("pause called");
+    paused = true;
+    updatePauseButtonIcon();
     audio.pause()
   });
   navigator.mediaSession.setActionHandler('stop', ()=>{
-    console.log("stop called")
+    console.log("stop called");
+    paused = true;
+    updatePauseButtonIcon();
     audio.pause()
   });
   navigator.mediaSession.setActionHandler('seekto', (_ev, _fast, _diff, value)=>{
@@ -219,6 +225,7 @@ function displayEpisodes(xmlDoc, channelTitle) {
         item.getElementsByTagName("content:encoded")[0]?.textContent ?? item.getElementsByTagName("description")[0]?.textContent
       ),
       audioUrl: enclosure ? enclosure.getAttribute("url") : null,
+      channelTitle
     };
   });
 
@@ -245,7 +252,7 @@ function displayEpisodes(xmlDoc, channelTitle) {
           href: "#",
           onclick: () => {
             episodeQueue.implicit = items.slice(0, index).reverse();
-            playEpisode(audioUrl, notes);
+            playEpisode(audioUrl, notes, title, channelTitle);
           },
           textContent: title,
         })
@@ -263,10 +270,10 @@ function displayEpisodes(xmlDoc, channelTitle) {
   );
 }
 
-function playEpisode(url, notes) {
+function playEpisode(url, notes, title, channelTitle) {
   navigator.mediaSession.metadata = new MediaMetadata({
-    title: url,
-    artist: "Unknown",
+    title: title,
+    artist: channelTitle,
     album: "Podcast",
     artwork: [
       {
@@ -398,5 +405,5 @@ function nextTrack() {
     return;
   }
 
-  playEpisode(nextEpisode.url.audioUrl, nextEpisode.url.notes);
+  playEpisode(nextEpisode.url.audioUrl, nextEpisode.url.notes, nextEpisode.url.title, nextEpisode.url.channelTitle);
 }
